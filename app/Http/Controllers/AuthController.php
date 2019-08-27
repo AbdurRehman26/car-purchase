@@ -29,6 +29,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         if ($token = $this->guard()->attempt($credentials)) {
+            
             return response()->json(new UserResource(Auth::user()), Response::HTTP_OK)->header('Authorization', $token);
         }
 

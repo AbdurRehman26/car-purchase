@@ -1,6 +1,5 @@
 const config = require('./webpack.config');
 const mix = require('laravel-mix');
-require('laravel-mix-eslint');
 
 function resolve(dir) {
   return path.join(
@@ -61,7 +60,7 @@ if (mix.inProduction()) {
   mix.version();
 } else {
   if (process.env.LARAVUE_USE_ESLINT === 'true') {
-    mix.eslint();
+    // mix.eslint();
   }
   // Development settings
   mix

@@ -10,7 +10,7 @@ const adminRoutes = {
   meta: {
     title: 'administrator',
     icon: 'admin',
-    permissions: ['view menu administrator'],
+    // permissions: ['view menu administrator'],
   },
   children: [
     /** User managements */
