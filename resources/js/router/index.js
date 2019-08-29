@@ -111,8 +111,8 @@ export const constantRoutes = [
     redirect: 'roles',
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        path: 'roles',
+        component: () => import('@/views/roles/list'),
         name: 'Roles',
         meta: { title: 'Roles', icon: 'role', noCache: false },
       },
@@ -124,8 +124,8 @@ export const constantRoutes = [
     redirect: 'purchases',
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        path: 'purchases',
+        component: () => import('@/views/purchases/list'),
         name: 'Purchases',
         meta: { title: 'Purchases', icon: 'list', noCache: false },
       },
@@ -140,7 +140,7 @@ export const asyncRoutes = [
   // chartsRoutes,
   // nestedRoutes,
   // tableRoutes,
-  adminRoutes,
+  // adminRoutes,
   // {
   //   path: '/theme',
   //   component: Layout,
