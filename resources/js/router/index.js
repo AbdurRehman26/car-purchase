@@ -131,6 +131,21 @@ export const constantRoutes = [
       },
     ],
   },
+
+  {
+    path : '',
+    component: Layout,
+    redirect: 'import',
+    children: [
+      {
+        path: 'upload-excel',
+        component: () => import('@/views/excel/UploadExcel'),
+        name: 'UploadExcel',
+        meta: { title: 'Upload Excel', icon: 'excel', noCache: false },
+      },
+    ],
+  },
+
   // elementUiRoutes,
 ];
 
@@ -159,11 +174,12 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true },
 ];
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes,
-});
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes,
+  });
 
 const router = createRouter();
 
