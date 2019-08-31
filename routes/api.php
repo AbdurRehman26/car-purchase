@@ -36,6 +36,10 @@ Route::group(['middleware' => 'api'], function () {
              'edit'
         ]);
 
+    Route::resource('operations', 'Api\V1\OperationController')->except([
+             'edit'
+        ]);
+
     Route::get('users/{user}/permissions', 'UserController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::put('users/{user}/permissions', 'UserController@updatePermissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     

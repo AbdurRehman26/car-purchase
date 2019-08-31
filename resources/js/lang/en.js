@@ -190,6 +190,8 @@ export default {
     'email': 'Email',
   },
   roles: {
+    title : "Title",
+    permissions : "Permissions", 
     description: {
       admin: 'Super Administrator. Have access and full permission to all pages.',
       manager: 'Manager. Have access and permission to most of pages except permission page.',

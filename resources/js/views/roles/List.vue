@@ -79,24 +79,19 @@
 
     <el-dialog :title="'Create new user'" :visible.sync="dialogFormVisible">
       <div v-loading="userCreating" class="form-container">
-        <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('user.role')" prop="role">
-            <el-select v-model="newUser.role" class="filter-item" placeholder="Please select role">
-              <el-option v-for="item in nonAdminRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
-            </el-select>
+        <el-form ref="userForm" :rules="rules" :model="formData" label-position="left" label-width="150px" style="max-width: 500px;">
+
+          <el-form-item :label="$t('roles.title')" prop="title">
+            <el-input v-model="formData.title" />
           </el-form-item>
-          <el-form-item :label="$t('user.name')" prop="name">
-            <el-input v-model="newUser.name" />
+
+          <el-form-item :label="$t('roles.permissions')" prop="permissions">
+ 
+            <el-checkbox v-for="operation in operations" v-model="formData.permissions">{{operation.title}}</el-checkbox>
+ 
           </el-form-item>
-          <el-form-item :label="$t('user.email')" prop="email">
-            <el-input v-model="newUser.email" />
-          </el-form-item>
-          <el-form-item :label="$t('user.password')" prop="password">
-            <el-input v-model="newUser.password" show-password />
-          </el-form-item>
-          <el-form-item :label="$t('user.confirmPassword')" prop="confirmPassword">
-            <el-input v-model="newUser.confirmPassword" show-password />
-          </el-form-item>
+
+        
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
@@ -115,11 +110,13 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import RoleResource from '@/api/role';
 import Resource from '@/api/resource';
+import OperationResource from '@/api/operation';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Waves directive
 import checkPermission from '@/utils/permission'; // Permission checking
 
 const roleResource = new RoleResource();
+const operationResource = new OperationResource();
 const permissionResource = new Resource('permissions');
 
 export default {
@@ -128,13 +125,14 @@ export default {
   directives: { waves, permission },
   data() {
     var validateConfirmPassword = (rule, value, callback) => {
-      if (value !== this.newUser.password) {
+      if (value !== this.formData.password) {
         callback(new Error('Password is mismatched!'));
       } else {
         callback();
       }
     };
     return {
+      operations : [],
       list: null,
       total: 0,
       loading: true,
@@ -148,7 +146,9 @@ export default {
       },
       roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
       nonAdminRoles: ['editor', 'user', 'visitor'],
-      newUser: {},
+      formData: {
+        permissions : []
+      },
       dialogFormVisible: false,
       dialogPermissionVisible: false,
       dialogPermissionLoading: false,
@@ -244,6 +244,8 @@ export default {
   created() {
     this.resetNewUser();
     this.getList();
+    this.getOperationsList()
+
     if (checkPermission(['manage permission'])) {
       this.getPermissions();
     }
@@ -256,6 +258,10 @@ export default {
       this.permissions = all;
       this.menuPermissions = menu;
       this.otherPermissions = other;
+    },
+    async getOperationsList() {
+      const response = await operationResource.list({});
+      this.operations = response.data
     },
 
     async getList() {
@@ -325,13 +331,13 @@ export default {
     createUser() {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
-          this.newUser.roles = [this.newUser.role];
+          this.formData.roles = [this.formData.role];
           this.userCreating = true;
           roleResource
-            .store(this.newUser)
+            .store(this.formData)
             .then(response => {
               this.$message({
-                message: 'New user ' + this.newUser.name + '(' + this.newUser.email + ') has been created successfully.',
+                message: 'New user ' + this.formData.name + '(' + this.formData.email + ') has been created successfully.',
                 type: 'success',
                 duration: 5 * 1000,
               });
@@ -352,7 +358,7 @@ export default {
       });
     },
     resetNewUser() {
-      this.newUser = {
+      this.formData = {
         name: '',
         email: '',
         password: '',
