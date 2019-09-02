@@ -14,7 +14,7 @@ service.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + getToken(); // Set JWT token
-      config.headers['Content-Type'] = 'multipart/form-data'; // Set JWT token
+      // config.headers['Content-Type'] = 'multipart/form-data; charset=utf-8; boundary='+Math.random().toString().substr(2)+ ';'; // Set JWT token
     }
 
     return config;

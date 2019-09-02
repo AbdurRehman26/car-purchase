@@ -176,6 +176,7 @@ return [
         App\Providers\PermissionRepositoryServiceProvider::class,
         App\Providers\RoleRepositoryServiceProvider::class,
         App\Providers\PurchaseRepositoryServiceProvider::class,
+        App\Providers\UserRepositoryServiceProvider::class,
 
 
         /*

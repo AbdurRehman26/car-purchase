@@ -56,7 +56,6 @@ class RoleController extends ApiResourceController{
     public function input($value=''){
 
         $input = request()->only('id', 'operations', 'title', 'pagination');
-        
         return $input;
     }
 

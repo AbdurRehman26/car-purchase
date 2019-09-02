@@ -202,7 +202,7 @@ export default {
   },
   purchases: {
     associate : "Associate to User",
-    permissions : "Permissions", 
+    update_associate : "Associate another User", 
     description: {
       admin: 'Super Administrator. Have access and full permission to all pages.',
       manager: 'Manager. Have access and permission to most of pages except permission page.',

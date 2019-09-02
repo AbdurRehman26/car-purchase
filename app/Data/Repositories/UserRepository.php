@@ -42,7 +42,7 @@ class UserRepository extends AbstractRepository implements RepositoryContract
     }
 
 
-        public function findById($id, $refresh = false, $details = false, $encode = true) {
+    public function findById($id, $refresh = false, $details = false, $encode = true) {
 
         $data = parent::findById($id, $refresh, $details, $encode);
 

@@ -71,7 +71,7 @@
             size="small"
             icon="el-icon-edit"
           >
-            {{ $t('purchases.associate') }}
+            {{ scope.row.user ? $t('purchases.update_associate')  : $t('purchases.associate') }}
           </el-button>
         </template>
       </el-table-column>
@@ -223,7 +223,7 @@ export default {
                 duration: 5 * 1000,
               });
               this.resetCurrentItem();
-              this.dialogFormVisible = false;
+              this.dialogPurchase = false;
               this.handleFilter();
             })
             .catch(error => {

@@ -41,6 +41,21 @@ class PurchaseRepository extends AbstractRepository implements RepositoryContrac
 
     }
 
+
+    public function findById($id, $refresh = false, $details = false, $encode = true) {
+
+        $data = parent::findById($id, $refresh, $details, $encode);
+
+        if($data->user_id){
+            $data->user = app('UserRepository')->findById($data->user_id);
+        }
+
+        return $data;
+
+    }
+
+
+
     public function insertMultiple($input)
     {
         $created_at = \Carbon\Carbon::now()->toDateTimeString();

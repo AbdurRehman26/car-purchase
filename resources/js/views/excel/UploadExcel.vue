@@ -5,19 +5,6 @@
       :on-success="handleSuccess"
       :before-upload="beforeUpload"
     />
-    <el-table
-      :data="tableData"
-      border
-      highlight-current-row
-      style="width: 100%;margin-top:20px;"
-    >
-      <el-table-column
-        v-for="item of tableHeader"
-        :key="item"
-        :prop="item"
-        :label="item"
-      />
-    </el-table>
   </div>
 </template>
 
@@ -39,9 +26,14 @@ export default {
     uploadFile(file) {
       let formData = new FormData();
       formData.append('file', file);
+      let self = this;
 
-      fileResource.store(formData);
-      console.log(file, 2222222);
+      let result = fileResource.store(formData).then(response => {
+        self.$message({
+          message: 'Data imported successfully',
+          type: 'success',
+        });
+      });
     },
     beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 1;
