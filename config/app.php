@@ -167,6 +167,17 @@ return [
          */
         Kazmi\Providers\ResourceCommandServiceProvider::class,
 
+
+
+        /*
+         * Package Service Providers...
+         */
+        App\Providers\OperationRepositoryServiceProvider::class,
+        App\Providers\PermissionRepositoryServiceProvider::class,
+        App\Providers\RoleRepositoryServiceProvider::class,
+        App\Providers\PurchaseRepositoryServiceProvider::class,
+
+
         /*
          * Application Service Providers...
          */

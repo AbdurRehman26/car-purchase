@@ -40,4 +40,22 @@ class PurchaseRepository extends AbstractRepository implements RepositoryContrac
         $this->builder = $model;
 
     }
+
+    public function insertMultiple($input)
+    {
+        $created_at = \Carbon\Carbon::now()->toDateTimeString();
+        # code...
+        
+        foreach ($input as $key => $row) {
+
+            $row['created_at'] = $created_at;
+            $row['updated_at'] = $created_at;
+            
+            $this->create($row);
+
+        }
+
+        return true;
+    }
+
 }

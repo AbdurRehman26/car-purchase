@@ -40,4 +40,44 @@ class RoleRepository extends AbstractRepository implements RepositoryContract
         $this->builder = $model;
 
     }
+
+
+        /**
+     *
+     * This method will fetch single model
+     * and will return output back to client as json
+     *
+     * @access public
+     * @return mixed
+     *
+     * @author Usaama Effendi <usaamaeffendi@gmail.com>
+     *
+     **/
+    public function findById($id, $refresh = false, $details = false, $encode = true){
+
+        $role = parent::findById($id , $refresh , $details , $encode);
+
+        $role->permissions = $this->getRolesWithPermissions($role->id);
+
+
+        return $role;
+    }
+
+
+    public function getRolesWithPermissions($role_id)
+    {
+
+            $roles = \DB::table('roles')
+                    ->join('permissions', 'roles.id', '=', 'permissions.role_id')
+                    ->join('operations', 'operations.id', '=', 'permissions.operation_id')
+                    ->select(['permissions.operation_id' , 'roles.title' , 'operations.title'])
+                    ->where('permissions.role_id' , $role_id)
+                    ->get();
+
+            return $roles;
+
+    }
+
+
+
 }

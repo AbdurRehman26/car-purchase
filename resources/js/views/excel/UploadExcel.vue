@@ -1,14 +1,30 @@
 <template>
   <div class="app-container">
-    <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
-    <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-      <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item" />
+    <upload-excel-component
+      @uploaded-file="uploadFile"
+      :on-success="handleSuccess"
+      :before-upload="beforeUpload"
+    />
+    <el-table
+      :data="tableData"
+      border
+      highlight-current-row
+      style="width: 100%;margin-top:20px;"
+    >
+      <el-table-column
+        v-for="item of tableHeader"
+        :key="item"
+        :prop="item"
+        :label="item"
+      />
     </el-table>
   </div>
 </template>
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/index.vue';
+import Resource from '@/api/resource';
+const fileResource = new Resource('file-export');
 
 export default {
   name: 'UploadExcel',
@@ -20,6 +36,13 @@ export default {
     };
   },
   methods: {
+    uploadFile(file) {
+      let formData = new FormData();
+      formData.append('file', file);
+
+      fileResource.store(formData);
+      console.log(file, 2222222);
+    },
     beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 1;
 

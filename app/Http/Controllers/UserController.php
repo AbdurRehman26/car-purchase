@@ -44,69 +44,49 @@ class UserController extends ApiResourceController
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param User    $user
-     * @return UserResource|\Illuminate\Http\JsonResponse
-     */
-    public function updatePermissions(Request $request, User $user)
-    {
-        if ($user === null) {
-            return response()->json(['error' => 'User not found'], 404);
+
+    public function rules($value=''){
+        $rules = [];
+
+        if($value == 'store'){
+            
+
         }
 
-        if ($user->isAdmin()) {
-            return response()->json(['error' => 'Admin can not be modified'], 403);
+        if($value == 'update'){
+
+            $rules['id'] =  'required';
+
         }
 
-        $permissionIds = $request->get('permissions', []);
-        $rolePermissionIds = array_map(
-            function($permission) {
-                return $permission['id'];
-            },
 
-            $user->getPermissionsViaRoles()->toArray()
-        );
+        if($value == 'destroy'){
 
-        $newPermissionIds = array_diff($permissionIds, $rolePermissionIds);
-        $permissions = Permission::allowed()->whereIn('id', $newPermissionIds)->get();
-        $user->syncPermissions($permissions);
-        return new UserResource($user);
-    }
+            $rules['id'] =  'required';
 
-    /**
-     * Get permissions from role
-     *
-     * @param User $user
-     * @return array|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function permissions(User $user)
-    {
-        try {
-            return new JsonResponse([
-                'user' => PermissionResource::collection($user->getDirectPermissions()),
-                'role' => PermissionResource::collection($user->getPermissionsViaRoles()),
-            ]);
-        } catch (\Exception $ex) {
-            response()->json(['error' => $ex->getMessage()], 403);
         }
+
+        if($value == 'show'){
+
+            $rules['id'] =  'required';
+
+        }
+
+        if($value == 'index'){
+         
+            $rules['pagination'] =  'nullable|in:true,false';
+
+        }
+
+        return $rules;
+    
     }
 
-    /**
-     * @param bool $isNew
-     * @return array
-     */
-    private function getValidationRules($isNew = true)
-    {
-        return [
-            'name' => 'required',
-            'email' => $isNew ? 'required|email|unique:users' : 'required|email',
-            'roles' => [
-                'required',
-                'array'
-            ],
-        ];
+    public function input($value=''){
+
+        $input = request()->only('id', 'name', 'email' , 'role_id', 'pagination');
+        return $input;
     }
+
+
 }

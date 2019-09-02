@@ -3,10 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Data\Models\Operation;
-use App\Data\Repositories\OperationRepository;
+use App\Data\Models\Permission;
+use App\Data\Repositories\PermissionRepository;
 
-class OperationRepositoryServiceProvider extends ServiceProvider
+class PermissionRepositoryServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
@@ -25,8 +25,8 @@ class OperationRepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('OperationRepository', function () {
-            return new OperationRepository(new Operation);
+        $this->app->bind('PermissionRepository', function () {
+            return new PermissionRepository(new Permission);
         });
     }
 }

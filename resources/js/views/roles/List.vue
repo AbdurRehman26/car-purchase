@@ -39,7 +39,7 @@
 
       <el-table-column align="center" label="Access">
         <template slot-scope="scope">
-          <span>{{ scope.row.scopes }}</span>
+          <span v-for="permission in scope.row.permissions">{{ permission.title + '| ' }} </span>
         </template>
       </el-table-column>
 
@@ -77,7 +77,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="'Create new user'" :visible.sync="dialogFormVisible">
+    <el-dialog :title="'Create new role'" :visible.sync="dialogFormVisible">
       <div v-loading="userCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="formData" label-position="left" label-width="150px" style="max-width: 500px;">
 
@@ -85,10 +85,11 @@
             <el-input v-model="formData.title" />
           </el-form-item>
 
-          <el-form-item :label="$t('roles.permissions')" prop="permissions">
- 
-            <el-checkbox v-for="operation in operations" v-model="formData.permissions">{{operation.title}}</el-checkbox>
- 
+          <el-form-item :label="$t('roles.permissions')">
+
+            <el-checkbox v-for="operation in operations" :label="operation.id" v-model="formData.operations" :key="operation.id">{{operation.title}}</el-checkbox>
+
+                
           </el-form-item>
 
         
@@ -147,7 +148,7 @@ export default {
       roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
       nonAdminRoles: ['editor', 'user', 'visitor'],
       formData: {
-        permissions : []
+        operations : []
       },
       dialogFormVisible: false,
       dialogPermissionVisible: false,
@@ -283,7 +284,6 @@ export default {
       this.getList();
     },
     handleCreate() {
-      this.resetNewUser();
       this.dialogFormVisible = true;
       this.$nextTick(() => {
         this.$refs['userForm'].clearValidate();
@@ -358,13 +358,6 @@ export default {
       });
     },
     resetNewUser() {
-      this.formData = {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        role: 'user',
-      };
     },
     handleDownload() {
       this.downloading = true;

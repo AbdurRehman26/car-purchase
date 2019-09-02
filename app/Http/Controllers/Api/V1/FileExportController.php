@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Data\Repositories\RoleRepository;
+use App\Data\Repositories\FileExportRepository;
 use Kazmi\Http\Controllers\ApiResourceController;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use App\Jobs\ImportCarData;
 
 
-class RoleController extends ApiResourceController{
+class FileExportController extends ApiResourceController{
     
     public $_repository;
 
-    public function __construct(RoleRepository $repository){
+    public function __construct(FileExportRepository $repository){
         $this->_repository = $repository;
     }
 
@@ -53,9 +54,12 @@ class RoleController extends ApiResourceController{
     
     }
 
+
     public function input($value=''){
 
-        $input = request()->only('id', 'operations', 'title', 'pagination');
+        $input = request()->only('id', 'file', 'test');
+
+        $input['file'] = request()->file('file');
         
         return $input;
     }
@@ -63,30 +67,26 @@ class RoleController extends ApiResourceController{
 
     public function store(Request $request)
     {
-        $data = $this->input(__FUNCTION__);
+        $input = $this->input(__FUNCTION__);
         $rules = $this->rules(__FUNCTION__);
 
         $this->validate($request, $rules);
 
-        $roleData = ['title' => $data['title']];
+        $tempFileName = $input['file']->storePublicly('');
+
+        ImportCarData::dispatch($tempFileName)->onQueue(config('queue.prefix') . 'case-update');
 
         $user_id = request()->user() ? request()->user()->id : null;
 
-        $role = $this->_repository->create($roleData);
-        
-        $data['role_id'] = $role->id;
-
-        $permissionsData = app('PermissionRepository')->composeInputData($data);
-        
-        app('PermissionRepository')->model->insertOnDuplicateKey($permissionsData);
-
-        $output = ['response' => ['message' => 'Role has been added successfully.']];
+        $output = ['message' => 'File Imported Successfully'];
 
         // HTTP_OK = 200;
 
         return response()->json($output, Response::HTTP_OK);
 
     }
+
+
 
 
 }

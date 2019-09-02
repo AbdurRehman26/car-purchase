@@ -71,6 +71,9 @@ export default {
       this.upload(rawFile);
     },
     upload(rawFile) {
+     
+      this.$emit('uploaded-file' , rawFile)
+
       this.$refs['excel-upload-input'].value = null; // fix can't select the same excel
 
       if (!this.beforeUpload) {

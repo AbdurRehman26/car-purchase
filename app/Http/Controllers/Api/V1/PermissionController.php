@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Data\Repositories\PurchaseRepository;
+use App\Data\Repositories\PermissionRepository;
 use Kazmi\Http\Controllers\ApiResourceController;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 
 
-class PurchaseController extends ApiResourceController{
+class PermissionController extends ApiResourceController{
     
     public $_repository;
 
-    public function __construct(PurchaseRepository $repository){
+    public function __construct(PermissionRepository $repository){
         $this->_repository = $repository;
     }
 
@@ -54,7 +54,7 @@ class PurchaseController extends ApiResourceController{
     }
 
     public function input($value=''){
-        $input = request()->only('id', 'user_id');
+        $input = request()->only('id');
         
         return $input;
     }
