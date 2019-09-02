@@ -97,6 +97,7 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
+        pagination : true
       },
       newUser: {},
       dialogFormVisible: false,
@@ -123,12 +124,16 @@ export default {
       this.loading = true;
       const response = await userResource.list(this.query);
 
+
+
+
       this.list = response.data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
-      this.total = 1;
+      this.total = response.pagination.total;
       this.loading = false;
+      
     },
     async getRolesList() {
 

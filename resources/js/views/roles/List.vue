@@ -140,6 +140,7 @@ export default {
       downloading: false,
       userCreating: false,
       query: {
+        pagination : true,
         page: 1,
         limit: 15,
         keyword: '',
@@ -276,7 +277,7 @@ export default {
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
-      this.total = 1;
+      this.total = response.pagination.total;
       this.loading = false;
     },
     handleFilter() {

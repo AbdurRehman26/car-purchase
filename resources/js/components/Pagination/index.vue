@@ -5,7 +5,6 @@
       :current-page.sync="currentPage"
       :page-size.sync="pageSize"
       :layout="layout"
-      :page-sizes="pageSizes"
       :total="total"
       v-bind="$attrs"
       @size-change="handleSizeChange"
@@ -32,15 +31,9 @@ export default {
       type: Number,
       default: 20,
     },
-    pageSizes: {
-      type: Array,
-      default() {
-        return [10, 15, 20, 30, 50];
-      },
-    },
     layout: {
       type: String,
-      default: 'total, sizes, prev, pager, next, jumper',
+      default: 'total, prev, pager, next, jumper',
     },
     background: {
       type: Boolean,
