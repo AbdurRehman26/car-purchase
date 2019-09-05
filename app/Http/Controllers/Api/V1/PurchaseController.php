@@ -55,7 +55,7 @@ class PurchaseController extends ApiResourceController{
 
     public function input($value=''){
         
-        $input = request()->only('id', 'user_id');
+        $input = request()->only('id', 'user_id', 'pagination', 'keyword');
         return $input;
     
     }
