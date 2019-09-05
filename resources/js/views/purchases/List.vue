@@ -41,7 +41,13 @@
 
       <el-table-column align="center" label="VIN No.">
         <template slot-scope="scope">
-          <span>{{ scope.row.vin }}</span>
+          <span>
+            {{ scope.row.vin.substr(0, scope.row.vin.length-4) }}
+          <strong>{{ scope.row.vin.substr(-4) }}</strong>
+
+
+        </span>
+          
         </template>
       </el-table-column>
 
@@ -178,9 +184,6 @@ export default {
       const { limit, page } = this.query;
       this.loading = true;
       const response = await purchaseResource.list(this.query);
-
-      console.log(response, 111111);
-
       this.list = response.data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
