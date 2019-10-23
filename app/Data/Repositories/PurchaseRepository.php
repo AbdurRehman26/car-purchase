@@ -76,9 +76,21 @@ class PurchaseRepository extends AbstractRepository implements RepositoryContrac
 
     public function findByAll($pagination = false, $perPage = 10, array $input = [] )
     {
+        $this->builder = $this->model->orderBy('id' , 'DESC');
+
+        if(empty($input['is_sold'])){
+
+            $this->builder = $this->builder->whereNull('is_sold');
+
+        }else{
+
+            $this->builder = $this->builder->whereNotNull('is_sold');
+
+        }
+
         if(!empty($input['keyword'])){
         
-            $this->builder = $this->model->where('vin' , 'LIKE' , '%'.$input['keyword'] .'%');
+            $this->builder = $this->builder->where('vin' , 'LIKE' , '%'.$input['keyword'] .'%');
 
         }
 

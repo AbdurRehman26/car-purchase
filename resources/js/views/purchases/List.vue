@@ -466,6 +466,7 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
+        is_sold: 0,
       },
       newItem: {
         trade_in: '',
