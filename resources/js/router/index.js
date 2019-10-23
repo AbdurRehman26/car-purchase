@@ -99,7 +99,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'users',
-        component: () => import('@/views/users/list'),
+        component: () => import('@/views/users/List'),
         name: 'Users',
         meta: { title: 'Users', icon: 'user', noCache: false },
       },
@@ -112,7 +112,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'roles',
-        component: () => import('@/views/roles/list'),
+        component: () => import('@/views/roles/List'),
         name: 'Roles',
         meta: { title: 'Roles', icon: 'role', noCache: false },
       },
@@ -125,7 +125,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'purchases',
-        component: () => import('@/views/purchases/list'),
+        component: () => import('@/views/purchases/List'),
         name: 'Purchases',
         meta: { title: 'Purchases', icon: 'list', noCache: false },
       },
