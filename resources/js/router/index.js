@@ -131,6 +131,19 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'sales',
+    children: [
+      {
+        path: 'sales',
+        component: () => import('@/views/sales/List'),
+        name: 'Sales',
+        meta: { title: 'Sales', icon: 'list', noCache: false },
+      },
+    ],
+  },
 
   {
     path : '',
