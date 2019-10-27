@@ -14,11 +14,6 @@
         {{ $t('table.add') }}
       </el-button>
 
-   
-      <el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in roles" :key="item" :label="item | uppercaseFirst" :value="item" />
-      </el-select>
-   
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
@@ -27,7 +22,33 @@
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
-    --></div>
+    -->
+
+      <el-select v-model="query.funding_status" :placeholder="'Funding'" clearable style="margin-left:10px; width: 150px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in fundingOptions" :key="item.key" :label="item.label | uppercaseFirst" :value="item.key" />
+      </el-select>
+
+
+      <el-select v-model="query.shipped_record" :placeholder="'Shipped'" clearable style="margin-left:10px; width: 150px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in shippedOptions" :key="item.key" :label="item.label | uppercaseFirst" :value="item.key" />
+      </el-select>
+
+      <el-select v-model="query.local_or_state" :placeholder="'Local / State'" clearable style="margin-left:10px; width: 150px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in ['local', 'state']" :key="item" :label="item | uppercaseFirst" :value="item" />
+      </el-select>
+
+
+      <el-select v-model="query.cash_finance" :placeholder="'Cash / Finance'" clearable style="margin-left:10px; width: 150px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in ['cash', 'finance']" :key="item" :label="item | uppercaseFirst" :value="item" />
+      </el-select>
+
+
+      <el-select v-model="query.location" :placeholder="'Location'" clearable style="margin-left:10px; width: 150px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in ['gone', 'lot' , 'on_lot']" :key="item" :label="item | uppercaseFirst" :value="item" />
+      </el-select>
+
+
+    </div>
 
     <el-table
       v-loading="loading"
@@ -70,33 +91,99 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="200">
+      <el-table-column align="center" label="Need To Address">
         <template slot-scope="scope">
-          <el-button
-            @click.prevent="handlePurchaseEdit(scope.row.id)"
-            type="primary"
-            size="small"
-            icon="el-icon-edit"
-          >
-            {{
-              scope.row.user
-                ? $t('purchases.update_associate')
-                : $t('purchases.associate')
-            }}
-          </el-button>
+          <span>{{ scope.row.need_to_address }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Update" width="200">
+      <el-table-column align="center" label="Trade In">
         <template slot-scope="scope">
-          <el-button
-            @click.prevent="handlePurchaseUpdate(scope.row.id, scope.row)"
-            type="info"
-            size="small"
-            icon="el-icon-edit"
-          >
-            Update
-          </el-button>
+          <span>{{ scope.row.trade_in }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Deposit">
+        <template slot-scope="scope">
+          <span>{{ scope.row.deposit }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Down Payment">
+        <template slot-scope="scope">
+          <span>{{ scope.row.down_payment }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Local / State">
+        <template slot-scope="scope">
+          <span>{{ scope.row.local_or_state }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Cash Finance">
+        <template slot-scope="scope">
+          <span>{{ scope.row.cash_finance }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Location">
+        <template slot-scope="scope">
+          <span>{{ scope.row.location }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Shipped">
+        <template slot-scope="scope">
+          <span>{{ scope.row.shipped }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Signed Record">
+        <template slot-scope="scope">
+          <span>{{ scope.row.shipped_record }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Lender">
+        <template slot-scope="scope">
+          <span>{{ scope.row.lender }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Funding Status">
+        <template slot-scope="scope">
+          <span>{{ scope.row.funding_status }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Warranty">
+        <template slot-scope="scope">
+          <span>{{ scope.row.parts_needed }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Inspection">
+        <template slot-scope="scope">
+          <span>{{ scope.row.inspection }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Parts Needed">
+        <template slot-scope="scope">
+          <span>{{ scope.row.parts_needed }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Make Ready">
+        <template slot-scope="scope">
+          <span>{{ scope.row.make_ready }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Repair Status">
+        <template slot-scope="scope">
+          <span>{{ scope.row.repair_status }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -108,306 +195,21 @@
       :limit.sync="query.limit"
       @pagination="getList"
     />
-
-    <el-dialog :visible.sync="dialogPurchase" title="Associate User">
-      <div v-loading="dialogPermissionLoading" class="form-container">
-        <div class="permissions-container">
-          <el-form
-            ref="userForm"
-            :rules="rules"
-            :model="purchaseItem"
-            label-position="left"
-            label-width="150px"
-            style="max-width: 500px;"
-          >
-            <el-form-item label="User">
-              <el-select
-                v-model="purchaseItem.user_id"
-                placeholder="please select a user"
-              >
-                <el-option
-                  v-for="user in users"
-                  :label="user.name"
-                  :value="user.id"
-                />
-              </el-select>
-            </el-form-item>
-
-            <div class="clear-left" />
-          </el-form>
-        </div>
-
-        <div style="text-align:right;">
-          <el-button type="danger" @click="dialogPurchase = false">
-            {{ $t('permission.cancel') }}
-          </el-button>
-          <el-button @click.prevent="updatePurchase" type="primary">
-            {{ $t('permission.confirm') }}
-          </el-button>
-        </div>
-      </div>
-    </el-dialog>
-
-    <el-dialog :visible.sync="dialogPurchaseUpdate" title="Update">
-      <div v-loading="dialogPermissionLoading" class="form-container">
-        <div class="permissions-container">
-          <el-form
-            ref="userForm"
-            :rules="rules"
-            :model="purchaseItem"
-            label-position="left"
-            label-width="150px"
-            style="max-width: 500px;"
-          >
-            <el-form-item label="Need To Address">
-              <el-input
-                type="textarea"
-                placeholder="Please input"
-                v-model="purchaseItem.need_to_address"
-                show-word-limit
-              >
-              </el-input>
-            </el-form-item>
-
-            <el-form-item label="Trade In">
-              <el-input
-                type="textarea"
-                placeholder="Please input"
-                v-model="purchaseItem.trade_in"
-                show-word-limit
-              >
-              </el-input>
-            </el-form-item>
-
-            <el-form-item label="Deposit">
-              <el-input
-                type="textarea"
-                placeholder="Please input"
-                v-model="purchaseItem.deposit"
-                show-word-limit
-              >
-              </el-input>
-            </el-form-item>
-
-            <el-form-item label="Down Payment">
-              <el-input
-                type="textarea"
-                placeholder="Please input"
-                v-model="purchaseItem.down_payment"
-                show-word-limit
-              >
-              </el-input>
-            </el-form-item>
-
-            <el-form-item label="Local / State">
-              <el-select
-                v-model="purchaseItem.state_or_local"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in ['local', 'state']"
-                  :key="item"
-                  :label="item.toUpperCase()"
-                  :value="item"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="Cash / Finance">
-              <el-select
-                v-model="purchaseItem.cash_finance"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in ['cash', 'finance']"
-                  :key="item"
-                  :label="item.toUpperCase()"
-                  :value="item"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="Location">
-              <el-select
-                v-model="purchaseItem.location"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in ['gone', 'lot', 'on_lot']"
-                  :key="item"
-                  :label="item.replace('_', ' ').toUpperCase()"
-                  :value="item"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="Shipped">
-              <el-select
-                v-model="purchaseItem.shipped"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in shippedOptions"
-                  :key="item.key"
-                  :label="item.label.replace('_', ' ').toUpperCase()"
-                  :value="item.key"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="Signed Record">
-              <el-select
-                v-model="purchaseItem.signed_record"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in ['yes', 'no']"
-                  :key="item"
-                  :label="item.replace('_', ' ').toUpperCase()"
-                  :value="item"
-                />
-              </el-select>
-            </el-form-item>
-
-
-            <el-form-item label="Lender">
-              <el-select
-                v-model="purchaseItem.lender"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in lenders"
-                  :key="item.id"
-                  :label="item.name.replace('_', ' ').toUpperCase()"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="Funding Status">
-              <el-select
-                v-model="purchaseItem.funding_status"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in fundingOptions"
-                  :key="item.key"
-                  :label="item.label.replace('_', ' ').toUpperCase()"
-                  :value="item.key"
-                />
-              </el-select>
-            </el-form-item>
-
-
-
-            <el-form-item label="Warranty">
-              <el-select
-                v-model="purchaseItem.warranty"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in warranties"
-                  :key="item.id"
-                  :label="item.name.replace('_', ' ').toUpperCase()"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-
-
-            <el-form-item label="Parts Needed">
-              <el-input
-                type="textarea"
-                placeholder="Please input"
-                v-model="purchaseItem.parts_needed"
-                show-word-limit
-              >
-              </el-input>
-            </el-form-item>
-
-            <el-form-item label="Inspection">
-              <el-select
-                v-model="purchaseItem.inspection"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in ['yes', 'no', 'n/a']"
-                  :key="item"
-                  :label="item.replace('_', ' ').toUpperCase()"
-                  :value="item"
-                />
-              </el-select>
-            </el-form-item>
-
-
-            <el-form-item label="Make Ready">
-              <el-select
-                v-model="purchaseItem.make_ready"
-                class="filter-item"
-                placeholder="Please select"
-              >
-                <el-option
-                  v-for="item in makes"
-                  :key="item.id"
-                  :label="item.name.replace('_', ' ').toUpperCase()"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="Repair Status">
-              <el-input
-                type="textarea"
-                placeholder="Please input"
-                v-model="purchaseItem.repair_status"
-                show-word-limit
-              >
-              </el-input>
-            </el-form-item>
-
-            <div class="clear-left" />
-          </el-form>
-        </div>
-
-        <div style="text-align:right;">
-          <el-button type="danger" @click="dialogPurchaseUpdate = false">
-            {{ $t('permission.cancel') }}
-          </el-button>
-          <el-button @click.prevent="updatePurchase" type="primary">
-            {{ $t('permission.confirm') }}
-          </el-button>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import PurchaseResource from '@/api/purchase';
-import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 
 const purchaseResource = new PurchaseResource();
-const userResource = new Resource('users');
 
 export default {
   name: 'UserList',
   components: { Pagination },
   data() {
     return {
-      makes: [],
-      warranties: [],
-      lenders: [],
       fundingOptions: [
         {
           key: 'draft',
@@ -453,6 +255,8 @@ export default {
           label: 'Pick Up',
         },
       ],
+
+
       users: [],
       purchaseItem: {},
       list: null,
@@ -466,26 +270,9 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
-        is_sold: 0,
+        is_sold: 1,
       },
-      newItem: {
-        trade_in: '',
-        need_to_address: '',
-        trade_in: '',
-        deposit: '',
-        down_payment: '',
-        state_or_local: '',
-        cash_finance: '',
-        location: '',
-        shipped: '',
-        signed_record: '',
-        parts_needed: '',
-        inspection: '',
-        make_ready: '',
-        lender: '',
-        funding_status: '',
-        repair_status: '',
-      },
+      newItem: {},
       dialogFormVisible: false,
       dialogPurchase: false,
       dialogPurchaseUpdate: false,
