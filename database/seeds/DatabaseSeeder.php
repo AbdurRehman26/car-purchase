@@ -46,5 +46,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(UsersTableSeeder::class);
+        $this->call(EntityTableSeeder::class);
+        $this->call(OperationTableSeeder::class);
     }
 }

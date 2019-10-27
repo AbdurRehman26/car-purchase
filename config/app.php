@@ -178,6 +178,7 @@ return [
         App\Providers\RoleRepositoryServiceProvider::class,
         App\Providers\PurchaseRepositoryServiceProvider::class,
         App\Providers\UserRepositoryServiceProvider::class,
+        App\Providers\EntityRepositoryServiceProvider::class,
 
 
         /*

@@ -164,4 +164,6 @@ Route::group(['middleware' => 'api'], function () {
         return response()->json(new JsonResponse(['pvData' => $data]));
     });
 
-});
+});Route::resource('entity', 'Api\V1\EntityController')->except([
+             'edit'
+        ]);
