@@ -164,6 +164,22 @@ Route::group(['middleware' => 'api'], function () {
         return response()->json(new JsonResponse(['pvData' => $data]));
     });
 
-});Route::resource('entity', 'Api\V1\EntityController')->except([
-             'edit'
-        ]);
+});
+
+
+Route::resource('entity', 'Api\V1\EntityController')->except([
+'edit'
+]);
+
+Route::resource('lender', 'Api\V1\LenderController')->except([
+'edit'
+]);
+
+
+Route::resource('warranty', 'Api\V1\WarrantyController')->except([
+'edit'
+]);
+
+Route::resource('funding-status', 'Api\V1\FundingStatusController')->except([
+    'edit'
+]);

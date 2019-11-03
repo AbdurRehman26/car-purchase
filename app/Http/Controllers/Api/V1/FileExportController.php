@@ -72,9 +72,13 @@ class FileExportController extends ApiResourceController{
 
         $this->validate($request, $rules);
 
-        $tempFileName = $input['file']->storePublicly('');
 
-        ImportCarData::dispatch($tempFileName)->onQueue(config('queue.prefix') . 'case-update');
+        $tempFileName = $input['file']->storePubliclyAs('/public', 'file.xlsx');
+       
+        dd(get_class_methods($input['file']));
+        move_uploaded_file($tmp_name, "$uploads_dir/$name");
+
+        ImportCarData::dispatch($tempFileName);
 
         $user_id = request()->user() ? request()->user()->id : null;
 

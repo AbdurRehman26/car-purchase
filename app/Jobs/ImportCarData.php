@@ -37,7 +37,7 @@ class ImportCarData implements ShouldQueue
 
         $fileName = $this->fileName;
 
-        $array = Excel::toArray(new CarDataImport, $fileName);
+        $array = Excel::toArray(new CarDataImport, storage_path('app/public/'.$fileName));
 
         $input = [];
 

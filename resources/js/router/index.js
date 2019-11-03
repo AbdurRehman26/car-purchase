@@ -146,7 +146,48 @@ export const constantRoutes = [
   },
 
   {
-    path : '',
+    path: '',
+    component: Layout,
+    redirect: 'warranty',
+    children: [
+      {
+        path: 'warranty',
+        component: () => import('@/views/warranty/List'),
+        name: 'Warranty',
+        meta: { title: 'Warranty', icon: 'list', noCache: false },
+      },
+    ],
+  },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'funding-status',
+    children: [
+      {
+        path: 'funding-status',
+        component: () => import('@/views/funding/List.vue'),
+        name: 'Funding Status',
+        meta: { title: 'Funding Status', icon: 'list', noCache: false },
+      },
+    ],
+  },
+
+  {
+    path: '',
+    component: Layout,
+    redirect: 'lenders',
+    children: [
+      {
+        path: 'lenders',
+        component: () => import('@/views/lenders/List.vue'),
+        name: 'Lenders',
+        meta: { title: 'Lenders', icon: 'list', noCache: false },
+      },
+    ],
+  },
+
+  {
+    path: '',
     component: Layout,
     redirect: 'import',
     children: [

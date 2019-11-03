@@ -266,7 +266,7 @@
                 placeholder="Please select"
               >
                 <el-option
-                  v-for="item in ['yes', 'no']"
+                  v-for="item in ['yes', 'no', 'pending']"
                   :key="item"
                   :label="item.replace('_', ' ').toUpperCase()"
                   :value="item"
@@ -333,7 +333,7 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="Inspection">
+            <el-form-item label="State Inspection">
               <el-select
                 v-model="purchaseItem.inspection"
                 class="filter-item"
