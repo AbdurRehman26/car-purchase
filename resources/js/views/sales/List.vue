@@ -34,9 +34,9 @@
       >
         <el-option
           v-for="item in fundingOptions"
-          :key="item.key"
-          :label="item.label | uppercaseFirst"
-          :value="item.key"
+          :key="item.id"
+          :label="item.name | uppercaseFirst"
+          :value="item.id"
         />
       </el-select>
 
@@ -83,7 +83,7 @@
         <el-option
           v-for="item in ['cash', 'finance']"
           :key="item"
-          :label="item | uppercaseFirst"
+          :label="item.replace('_', ' ') | uppercaseFirst"
           :value="item"
         />
       </el-select>
@@ -99,10 +99,35 @@
         <el-option
           v-for="item in ['gone', 'lot', 'on_lot']"
           :key="item"
-          :label="item | uppercaseFirst"
+          :label="item.replace('_', ' ') | uppercaseFirst"
           :value="item"
         />
       </el-select>
+
+      <el-select
+        v-model="query.sales_status"
+        :placeholder="'Sales Status'"
+        clearable
+        style="margin-left:10px; width: 150px"
+        class="filter-item"
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in ['active', 'done', 'cancel']"
+          :key="item"
+          :label="item.replace('_', ' ') | uppercaseFirst"
+          :value="item"
+        />
+      </el-select>
+
+      <el-input
+        type="date"
+        style="margin-left:10px; width: 150px"
+        placeholder="File Uploaded"
+        v-model="query.file_uploaded_at"
+        @change="handleFilter"
+      >
+      </el-input>
     </div>
 
     <el-table
@@ -142,103 +167,213 @@
 
       <el-table-column align="center" label="User">
         <template slot-scope="scope">
-          <span>{{ scope.row.user ? scope.row.user.name : '' }}</span>
+          <span>{{ scope.row.user ? scope.row.user.name : 'N/A' }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Need To Address">
         <template slot-scope="scope">
-          <span>{{ scope.row.need_to_address }}</span>
+          <span>{{
+            scope.row.need_to_address ? scope.row.need_to_address : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Trade In">
         <template slot-scope="scope">
-          <span>{{ scope.row.trade_in }}</span>
+          <span>{{ scope.row.trade_in ? scope.row.trade_in : 'N/A' }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Deposit">
         <template slot-scope="scope">
-          <span>{{ scope.row.deposit }}</span>
+          <span>{{ scope.row.deposit ? scope.row.deposit : 'N/A' }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Down Payment">
         <template slot-scope="scope">
-          <span>{{ scope.row.down_payment }}</span>
+          <span>{{
+            scope.row.down_payment ? scope.row.down_payment : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Local / State">
         <template slot-scope="scope">
-          <span>{{ scope.row.local_or_state }}</span>
+          <span>{{
+            scope.row.local_or_state
+              ? scope.row.local_or_state.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Cash Finance">
         <template slot-scope="scope">
-          <span>{{ scope.row.cash_finance }}</span>
+          <span>{{
+            scope.row.cash_finance
+              ? scope.row.cash_finance.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Location">
         <template slot-scope="scope">
-          <span>{{ scope.row.location }}</span>
+          <span>{{
+            scope.row.location
+              ? scope.row.location.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Shipped">
         <template slot-scope="scope">
-          <span>{{ scope.row.shipped }}</span>
+          <span>{{
+            scope.row.shipped
+              ? scope.row.shipped.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Signed Record">
         <template slot-scope="scope">
-          <span>{{ scope.row.shipped_record }}</span>
+          <span>{{
+            scope.row.signed_record
+              ? scope.row.signed_record.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Lender">
         <template slot-scope="scope">
-          <span>{{ scope.row.lender }}</span>
+          <span>{{
+            scope.row.lender_value
+              ? scope.row.lender_value.name.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Funding Status">
         <template slot-scope="scope">
-          <span>{{ scope.row.funding_status }}</span>
+          <span>{{
+            scope.row.funding_status
+              ? scope.row.funding_status.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Warranty">
         <template slot-scope="scope">
-          <span>{{ scope.row.parts_needed }}</span>
+          <span>{{
+            scope.row.warranty_value
+              ? scope.row.warranty_value.name.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="State Inspection">
         <template slot-scope="scope">
-          <span>{{ scope.row.inspection }}</span>
+          <span>{{
+            scope.row.inspection
+              ? scope.row.inspection.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Parts Needed">
         <template slot-scope="scope">
-          <span>{{ scope.row.parts_needed }}</span>
+          <span>{{
+            scope.row.parts_needed
+              ? scope.row.parts_needed.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Make Ready">
         <template slot-scope="scope">
-          <span>{{ scope.row.make_ready }}</span>
+          <span>{{
+            scope.row.make_ready_value
+              ? scope.row.make_ready_value.name.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Repair Status">
         <template slot-scope="scope">
-          <span>{{ scope.row.repair_status }}</span>
+          <span>{{
+            scope.row.repair_status
+              ? scope.row.repair_status.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Ship Date">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.ship_date
+              ? new Date(scope.row.ship_date).toLocaleDateString()
+              : 'N/A'
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Notes">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.notes
+              ? scope.row.notes.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Docs Needed">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.docs_needed
+              ? scope.row.docs_needed.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Review">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.review
+              ? scope.row.review.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Sales Status">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.sales_status
+              ? scope.row.sales_status.replace('_', ' ').toUpperCase()
+              : 'N/A'
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="File Uploaded At">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.file_uploaded_at ? scope.row.file_uploaded_at : 'N/A'
+          }}</span>
         </template>
       </el-table-column>
 
@@ -264,7 +399,7 @@
     </el-table>
 
     <el-dialog :visible.sync="dialogEditOpen" title="Edit Sales">
-      <div  v-loading="currentItemUpdate" class="form-container">
+      <div v-loading="currentItemUpdate" class="form-container">
         <div v-if="currentItem" class="permissions-container">
           <el-form
             ref="userForm"
@@ -412,9 +547,9 @@
               >
                 <el-option
                   v-for="item in fundingOptions"
-                  :key="item.key"
-                  :label="item.label.replace('_', ' ').toUpperCase()"
-                  :value="item.key"
+                  :key="item.id"
+                  :label="item.name.replace('_', ' ').toUpperCase()"
+                  :value="item.id"
                 />
               </el-select>
             </el-form-item>
@@ -466,7 +601,7 @@
                 placeholder="Please select"
               >
                 <el-option
-                  v-for="item in makes"
+                  v-for="item in make_ready"
                   :key="item.id"
                   :label="item.name.replace('_', ' ').toUpperCase()"
                   :value="item.id"
@@ -484,18 +619,71 @@
               </el-input>
             </el-form-item>
 
+            <el-form-item label="Ship Date">
+              <el-input
+                type="date"
+                placeholder="Please input"
+                v-model="currentItem.ship_date"
+              >
+              </el-input>
+            </el-form-item>
+
+            <el-form-item label="Notes">
+              <el-input
+                type="textarea"
+                placeholder="Please input"
+                v-model="currentItem.notes"
+                show-word-limit
+              >
+              </el-input>
+            </el-form-item>
+
+            <el-form-item label="Docs Needed">
+              <el-input
+                type="textarea"
+                placeholder="Please input"
+                v-model="currentItem.docs_needed"
+                show-word-limit
+              >
+              </el-input>
+            </el-form-item>
+
+            <el-form-item label="Review">
+              <el-input
+                type="textarea"
+                placeholder="Please input"
+                v-model="currentItem.review"
+                show-word-limit
+              >
+              </el-input>
+            </el-form-item>
+
+            <el-form-item label="Sales Status">
+              <el-select
+                v-model="currentItem.sales_status"
+                :placeholder="'Sales Status'"
+                clearable
+                style="margin-left:10px; width: 150px"
+                class="filter-item"
+              >
+                <el-option
+                  v-for="item in ['active', 'done', 'cancel']"
+                  :key="item"
+                  :label="item.replace('_', ' ') | uppercaseFirst"
+                  :value="item"
+                />
+              </el-select>
+            </el-form-item>
+
             <div class="clear-left" />
-          
 
-          <el-button
-            @click.prevent="updatePurchase()"
-            type="info"
-            size="small"
-          >
-          Update
-          </el-button>
-
-
+            <el-button
+              @click.prevent="updatePurchase()"
+              type="info"
+              size="small"
+            >
+              Update
+            </el-button>
           </el-form>
         </div>
       </div>
@@ -506,6 +694,7 @@
         <div class="permissions-container">
           <el-form v-if="currentItem" ref="form" label-width="320px">
             <el-form-item
+              :key="index"
               v-for="(listValue, index) in listKeys"
               :label="listValue.label"
             >
@@ -528,10 +717,17 @@
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
+import Resource from '@/api/resource';
 import PurchaseResource from '@/api/purchase';
 import waves from '@/directive/waves'; // Waves directive
 
 const purchaseResource = new PurchaseResource();
+const warrantyResource = new Resource('warranty');
+const fundingResource = new Resource('funding-status');
+const lenderResource = new Resource('lender');
+const makeReadyResource = new Resource('make-ready');
+
+const moment = require('moment');
 
 export default {
   name: 'UserList',
@@ -614,28 +810,7 @@ export default {
           label: 'Repair Status',
         },
       ],
-      fundingOptions: [
-        {
-          key: 'draft',
-          label: 'Funded-Draft',
-        },
-        {
-          key: 'not',
-          label: 'Not Funded',
-        },
-        {
-          key: 'financed',
-          label: 'Funded-Financed',
-        },
-        {
-          key: 'wired',
-          label: 'Funded-Wire',
-        },
-        {
-          key: 'cashier',
-          label: 'Funded-Cashier ck',
-        },
-      ],
+      fundingOptions: [],
       shippedOptions: [
         {
           key: 'pu',
@@ -659,7 +834,7 @@ export default {
         },
       ],
       currentItemUpdate: false,
-      makes: [],
+      make_ready: [],
       warranties: [],
       lenders: [],
       dialogEditOpen: false,
@@ -692,8 +867,62 @@ export default {
   created() {
     this.resetCurrentItem();
     this.getList();
+    this.getOptions();
   },
   methods: {
+    getOptions() {
+      this.getWarranties();
+      this.getFundings();
+      this.getLenders();
+      this.getMakeReady();
+    },
+    async getMakeReady() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const response = await makeReadyResource.list(this.query);
+      this.make_ready = response.data;
+
+      this.make_ready.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = response.pagination.total;
+      this.loading = false;
+    },
+    async getWarranties() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const response = await warrantyResource.list(this.query);
+      this.warranties = response.data;
+      console.log(this.warranties, 222);
+      this.warranties.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = response.pagination.total;
+      this.loading = false;
+    },
+    async getFundings() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const response = await fundingResource.list(this.query);
+      this.fundingOptions = response.data;
+      this.fundingOptions.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = response.pagination.total;
+      this.loading = false;
+    },
+    async getLenders() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const response = await lenderResource.list(this.query);
+      this.lenders = response.data;
+      this.lenders.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = response.pagination.total;
+      this.loading = false;
+    },
+
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
@@ -717,7 +946,16 @@ export default {
       });
     },
     async editSalesDetail(currentItem) {
-      this.currentItem = currentItem;
+      this.currentItem = Object.assign({}, currentItem);
+
+      if (this.currentItem.ship_date) {
+        this.currentItem.ship_date = moment(this.currentItem.ship_date).format(
+          'YYYY-MM-DD'
+        );
+      }
+
+      console.log(this.currentItem, 2312321);
+
       this.dialogEditOpen = true;
     },
     async viewSalesDetail(currentItem) {

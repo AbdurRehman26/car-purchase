@@ -46,7 +46,7 @@ class UserRepository extends AbstractRepository implements RepositoryContract
 
         $data = parent::findById($id, $refresh, $details, $encode);
 
-        if($data->role_id){
+        if(!empty($data->role_id)){
             $data->role = app('RoleRepository')->findById($data->role_id);
         }
 

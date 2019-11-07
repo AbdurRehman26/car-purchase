@@ -75,8 +75,7 @@ class FileExportController extends ApiResourceController{
 
         $tempFileName = $input['file']->storePubliclyAs('/public', 'file.xlsx');
        
-        dd(get_class_methods($input['file']));
-        move_uploaded_file($tmp_name, "$uploads_dir/$name");
+        // move_uploaded_file($tmp_name, "$uploads_dir/$name");
 
         ImportCarData::dispatch($tempFileName);
 

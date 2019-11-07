@@ -183,3 +183,7 @@ Route::resource('warranty', 'Api\V1\WarrantyController')->except([
 Route::resource('funding-status', 'Api\V1\FundingStatusController')->except([
     'edit'
 ]);
+
+Route::resource('make-ready', 'Api\V1\MakeReadyController')->except([
+    'edit'
+]);

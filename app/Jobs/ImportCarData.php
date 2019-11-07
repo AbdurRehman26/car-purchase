@@ -39,8 +39,8 @@ class ImportCarData implements ShouldQueue
 
         $array = Excel::toArray(new CarDataImport, storage_path('app/public/'.$fileName));
 
-        $input = [];
-
+        $input = [];    
+        
         foreach ($array[0] as $key => $row) {
             
             if($key){
@@ -49,7 +49,8 @@ class ImportCarData implements ShouldQueue
                 'vin' => $row[0],
                 'year'=> $row[1],
                 'make' => $row[2],
-                'model' => $row[3]
+                'model' => $row[3],
+                'file_uploaded_at' => \Carbon\Carbon::now()->toDateString()
             ];
 
             }            

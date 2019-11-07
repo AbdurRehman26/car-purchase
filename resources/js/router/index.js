@@ -171,6 +171,19 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'make-ready',
+    children: [
+      {
+        path: 'make-ready',
+        component: () => import('@/views/make_ready/List.vue'),
+        name: 'Make Ready',
+        meta: { title: 'Make Ready', icon: 'list', noCache: false },
+      },
+    ],
+  },
 
   {
     path: '',

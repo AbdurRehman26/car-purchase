@@ -126,7 +126,8 @@
                 placeholder="please select a user"
               >
                 <el-option
-                  v-for="user in users"
+                  :key="index"
+                  v-for="(user, index) in users"
                   :label="user.name"
                   :value="user.id"
                 />
@@ -141,7 +142,7 @@
           <el-button type="danger" @click="dialogPurchase = false">
             {{ $t('permission.cancel') }}
           </el-button>
-          <el-button @click.prevent="updatePurchase" type="primary">
+          <el-button @click.prevent="updatePurchase('user')" type="primary">
             {{ $t('permission.confirm') }}
           </el-button>
         </div>
@@ -201,7 +202,7 @@
 
             <el-form-item label="Local / State">
               <el-select
-                v-model="purchaseItem.state_or_local"
+                v-model="purchaseItem.local_or_state"
                 class="filter-item"
                 placeholder="Please select"
               >
@@ -274,7 +275,6 @@
               </el-select>
             </el-form-item>
 
-
             <el-form-item label="Lender">
               <el-select
                 v-model="purchaseItem.lender"
@@ -298,14 +298,12 @@
               >
                 <el-option
                   v-for="item in fundingOptions"
-                  :key="item.key"
-                  :label="item.label.replace('_', ' ').toUpperCase()"
-                  :value="item.key"
+                  :key="item.id"
+                  :label="item.name.replace('_', ' ').toUpperCase()"
+                  :value="item.id"
                 />
               </el-select>
             </el-form-item>
-
-
 
             <el-form-item label="Warranty">
               <el-select
@@ -321,7 +319,6 @@
                 />
               </el-select>
             </el-form-item>
-
 
             <el-form-item label="Parts Needed">
               <el-input
@@ -348,7 +345,6 @@
               </el-select>
             </el-form-item>
 
-
             <el-form-item label="Make Ready">
               <el-select
                 v-model="purchaseItem.make_ready"
@@ -356,7 +352,7 @@
                 placeholder="Please select"
               >
                 <el-option
-                  v-for="item in makes"
+                  v-for="item in make_ready"
                   :key="item.id"
                   :label="item.name.replace('_', ' ').toUpperCase()"
                   :value="item.id"
@@ -373,6 +369,61 @@
               >
               </el-input>
             </el-form-item>
+
+
+            <el-form-item label="Repair Status">
+              <el-input
+                type="textarea"
+                placeholder="Please input"
+                v-model="purchaseItem.repair_status"
+                show-word-limit
+              >
+              </el-input>
+            </el-form-item>
+
+            <el-form-item label="Ship Date">
+              <el-input
+                type="date"
+                placeholder="Please input"
+                v-model="purchaseItem.ship_date"
+              >
+              </el-input>
+            </el-form-item>
+
+
+            <el-form-item label="Notes">
+              <el-input
+                type="textarea"
+                placeholder="Please input"
+                v-model="purchaseItem.notes"
+                show-word-limit
+              >
+              </el-input>
+            </el-form-item>
+
+
+            <el-form-item label="Docs Needed">
+              <el-input
+                type="textarea"
+                placeholder="Please input"
+                v-model="purchaseItem.docs_needed"
+                show-word-limit
+              >
+              </el-input>
+            </el-form-item>
+
+
+            <el-form-item label="Review">
+              <el-input
+                type="textarea"
+                placeholder="Please input"
+                v-model="purchaseItem.review"
+                show-word-limit
+              >
+              </el-input>
+            </el-form-item>
+
+
 
             <div class="clear-left" />
           </el-form>
@@ -399,38 +450,20 @@ import waves from '@/directive/waves'; // Waves directive
 
 const purchaseResource = new PurchaseResource();
 const userResource = new Resource('users');
+const warrantyResource = new Resource('warranty');
+const fundingResource = new Resource('funding-status');
+const lenderResource = new Resource('lender');
+const makeReadyResource = new Resource('make-ready');
 
 export default {
   name: 'UserList',
   components: { Pagination },
   data() {
     return {
-      makes: [],
+      make_ready: [],
       warranties: [],
       lenders: [],
-      fundingOptions: [
-        {
-          key: 'draft',
-          label: 'Funded-Draft',
-        },
-        {
-          key: 'not',
-          label: 'Not Funded',
-        },
-        {
-          key: 'financed',
-          label: 'Funded-Financed',
-        },
-        {
-          key: 'wired',
-          label: 'Funded-Wire',
-        },
-        {
-          key: 'cashier',
-          label: 'Funded-Cashier ck',
-        },
-        
-      ],
+      fundingOptions: [],
       shippedOptions: [
         {
           key: 'pu',
@@ -474,7 +507,7 @@ export default {
         trade_in: '',
         deposit: '',
         down_payment: '',
-        state_or_local: '',
+        local_or_state: '',
         cash_finance: '',
         location: '',
         shipped: '',
@@ -498,8 +531,62 @@ export default {
   created() {
     this.resetCurrentItem();
     this.getList();
+    this.getOptions();
   },
   methods: {
+    getOptions() {
+      this.getWarranties();
+      this.getFundings();
+      this.getLenders();
+      this.getMakeReady();
+    },
+    async getMakeReady() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const response = await makeReadyResource.list(this.query);
+      this.make_ready = response.data;
+
+      this.make_ready.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = response.pagination.total;
+      this.loading = false;
+    },
+    async getWarranties() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const response = await warrantyResource.list(this.query);
+      this.warranties = response.data;
+      console.log(this.warranties , 222);
+      this.warranties.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = response.pagination.total;
+      this.loading = false;
+    },
+    async getFundings() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const response = await fundingResource.list(this.query);
+      this.fundingOptions = response.data;
+      this.fundingOptions.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = response.pagination.total;
+      this.loading = false;
+    },
+    async getLenders() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const response = await lenderResource.list(this.query);
+      this.lenders = response.data;
+      this.lenders.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = response.pagination.total;
+      this.loading = false;
+    },
+
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
@@ -542,10 +629,14 @@ export default {
       this.dialogPurchaseUpdate = true;
       this.dialogPermissionLoading = false;
     },
-    updatePurchase() {
+    updatePurchase(userType) {
       this.$refs['userForm'].validate(valid => {
         if (valid) {
-          this.purchaseItem.is_sold = 1;
+
+          if(userType != 'user'){
+            this.purchaseItem.is_sold = 1;
+          }
+
           this.userCreating = true;
           purchaseResource
             .update(this.currentItemId, this.purchaseItem)

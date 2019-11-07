@@ -55,7 +55,7 @@ class PurchaseController extends ApiResourceController{
 
     public function input($value=''){
         
-        $input = request()->only('id', 'user_id', 'pagination', 'keyword', 'cash_finance', 'deposit', 'down_payment', 'funding_status', 'inspection', 'lender', 'local_or_state', 'location', 'make_ready', 'parts_needed', 'repair_status', 'shipped', 'signed_record', 'trade_in', 'warranty', 'need_to_address', 'is_sold');
+        $input = request()->only('id', 'user_id', 'pagination', 'keyword', 'cash_finance', 'deposit', 'down_payment', 'funding_status', 'inspection', 'lender', 'local_or_state', 'location', 'make_ready', 'parts_needed', 'repair_status', 'shipped', 'signed_record', 'trade_in', 'warranty', 'need_to_address', 'is_sold', 'review', 'docs_needed', 'ship_date', 'notes', 'file_uploaded_at', 'sales_status');
         return $input;
     
     }

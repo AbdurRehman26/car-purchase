@@ -5,9 +5,11 @@ namespace App\Data\Repositories;
 use Kazmi\Data\Contracts\RepositoryContract;
 use Kazmi\Data\Repositories\AbstractRepository;
 use App\Data\Models\Purchase;
+use App\Traits\AbstractMethods;
 
 class PurchaseRepository extends AbstractRepository implements RepositoryContract
 {
+    use AbstractMethods;
     /**
      *
      * These will hold the instance of Purchase Class.
@@ -50,6 +52,25 @@ class PurchaseRepository extends AbstractRepository implements RepositoryContrac
             $data->user = app('UserRepository')->findById($data->user_id);
         }
 
+        if(!empty($data->lender)){
+
+            $data->lender_value = \App\Data\Models\Lender::find($data->lender);
+
+        }
+
+        if(!empty($data->warranty)){
+
+            $data->warranty_value = \App\Data\Models\Warranty::find($data->warranty);
+
+        }
+
+        if(!empty($data->make_ready)){
+
+            $data->make_ready_value = \App\Data\Models\MakeReady::find($data->make_ready);
+
+        }
+
+
         return $data;
 
     }
@@ -76,7 +97,10 @@ class PurchaseRepository extends AbstractRepository implements RepositoryContrac
 
     public function findByAll($pagination = false, $perPage = 10, array $input = [] )
     {
-        $this->builder = $this->model->orderBy('id' , 'DESC');
+        
+        $this->builder = $this->searchCriteria($input);
+
+        $this->builder = $this->builder->orderBy('id' , 'DESC');
 
         if(empty($input['is_sold'])){
 
@@ -93,6 +117,13 @@ class PurchaseRepository extends AbstractRepository implements RepositoryContrac
             $this->builder = $this->builder->where('vin' , 'LIKE' , '%'.$input['keyword'] .'%');
 
         }
+
+        if(!empty($input['file_uploaded_at'])){
+
+            $this->builder = $this->builder->whereDate('file_uploaded_at' , '=' , $input['file_uploaded_at']);
+
+        }
+
 
         return parent::findByAll($pagination, $perPage, $input);
 
