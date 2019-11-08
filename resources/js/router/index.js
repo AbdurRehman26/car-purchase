@@ -14,15 +14,6 @@ import Layout from '@/layout';
 
 /* Router for modules */
 // import elementUiRoutes from './modules/element-ui';
-import componentRoutes from './modules/components';
-import chartsRoutes from './modules/charts';
-import tableRoutes from './modules/table';
-import adminRoutes from './modules/admin';
-import nestedRoutes from './modules/nested';
-import errorRoutes from './modules/error';
-import excelRoutes from './modules/excel';
-import permissionRoutes from './modules/permission';
-
 /**
  * Sub-menu only appear when children.length>=1
  * @see https://doc.laravue.dev/guide/essentials/router-and-nav.html
