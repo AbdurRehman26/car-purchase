@@ -40,4 +40,12 @@ class OperationRepository extends AbstractRepository implements RepositoryContra
         $this->builder = $model;
 
     }
+
+
+    public function findByAll($pagination = false, $perPage = 10, array $input = [] ) {
+
+        $this->builder = $this->model->where('method', 'GET');
+    
+        return parent::findByAll($pagination, $perPage, $input);
+    }
 }

@@ -39,7 +39,7 @@
 
       <el-table-column align="center" label="Access">
         <template slot-scope="scope">
-          <span v-for="permission in scope.row.permissions">{{ permission.title + '| ' }} </span>
+          <span v-for="permission in scope.row.permissions">{{ permission.title.replace(new RegExp('_', 'g'), ' ').toUpperCase() + ' | ' }} </span>
         </template>
       </el-table-column>
 
@@ -87,7 +87,7 @@
 
           <el-form-item :label="$t('roles.permissions')">
 
-            <el-checkbox v-for="operation in operations" :label="operation.id" v-model="formData.operations" :key="operation.id">{{operation.title}}</el-checkbox>
+            <el-checkbox v-for="operation in operations" :label="operation.id" v-model="formData.operations" :key="operation.id">{{operation.title.replace(new RegExp('_', 'g'), ' ').toUpperCase()}}</el-checkbox>
 
                 
           </el-form-item>

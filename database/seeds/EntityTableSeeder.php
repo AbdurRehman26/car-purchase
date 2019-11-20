@@ -16,7 +16,24 @@ class EntityTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         \DB::table('entities')->truncate();
 
-    	$inputArray = ['Dashboard' , 'Products' , 'Users' , 'Qr Codes' , 'Inventory Settings'];
+    	$inputArray = [
+        'trade_in' , 
+        'need_to_address',
+        'trade_in',
+        'deposit',
+        'down_payment',
+        'local_or_state',
+        'cash_finance',
+        'location',
+        'shipped',
+        'signed_record',
+        'parts_needed',
+        'inspection',
+        'make_ready',
+        'lender',
+        'funding_status',
+        'repair_status',
+        ];
     	
         // $generalInputArray = [ 'User' , 'Role' , 'Configuration' , 'Brands'];
 
