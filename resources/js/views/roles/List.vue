@@ -1,28 +1,28 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-   
+
 
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>
 
    <!--    <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-   
+
       <el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in roles" :key="item" :label="item | uppercaseFirst" :value="item" />
       </el-select>
-   
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-   
+
 
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
     -->
-    </div>  
+    </div>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -39,7 +39,7 @@
 
       <el-table-column align="center" label="Access">
         <template slot-scope="scope">
-          <span v-for="permission in scope.row.permissions">{{ permission.title.replace(new RegExp('_', 'g'), ' ').toUpperCase() + ' | ' }} </span>
+          <span v-for="permission in scope.row.permissions">{{ permission.title.replace('View', '').replace(new RegExp('_', 'g'), ' ').toUpperCase() + ' | ' }} </span>
         </template>
       </el-table-column>
 
@@ -87,12 +87,12 @@
 
           <el-form-item :label="$t('roles.permissions')">
 
-            <el-checkbox v-for="operation in operations" :label="operation.id" v-model="formData.operations" :key="operation.id">{{operation.title.replace(new RegExp('_', 'g'), ' ').toUpperCase()}}</el-checkbox>
+            <el-checkbox v-for="operation in operations" :label="operation.id" v-model="formData.operations" :key="operation.id">{{operation.title.replace('View' , '').replace(new RegExp('_', 'g'), ' ').toUpperCase()}}</el-checkbox>
 
-                
+
           </el-form-item>
 
-        
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
@@ -161,6 +161,7 @@ export default {
         rolePermissions: [],
       },
       rules: {
+        title: [{ required: true, message: 'Title is required', trigger: 'change' }],
         role: [{ required: true, message: 'Role is required', trigger: 'change' }],
         name: [{ required: true, message: 'Name is required', trigger: 'blur' }],
         email: [
@@ -270,7 +271,7 @@ export default {
       const { limit, page } = this.query;
       this.loading = true;
       const response = await roleResource.list(this.query);
-      
+
       console.log(response.data , 111111)
 
       this.list = response.data;

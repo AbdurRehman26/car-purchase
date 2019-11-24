@@ -9,25 +9,8 @@
         @keyup.enter.native="handleFilter"
       />
 
-      <!-- 
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
-        {{ $t('table.add') }}
-      </el-button>
+    </div>
 
-   
-      <el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in roles" :key="item" :label="item | uppercaseFirst" :value="item" />
-      </el-select>
-   
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        {{ $t('table.search') }}
-      </el-button>
-   
-
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
-      </el-button>
-    --></div>
 
     <el-table
       v-loading="loading"
@@ -160,7 +143,7 @@
             label-width="150px"
             style="max-width: 500px;"
           >
-            <el-form-item label="Need To Address">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('need_to_address')" label="Need To Address">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -170,7 +153,7 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="Trade In">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('trade_in')" label="Trade In">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -180,7 +163,7 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="Deposit">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('deposit')" label="Deposit">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -190,7 +173,7 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="Down Payment">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('down_payment')" label="Down Payment">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -200,7 +183,7 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="Local / State">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('local_or_state')" label="Local / State">
               <el-select
                 v-model="purchaseItem.local_or_state"
                 class="filter-item"
@@ -215,7 +198,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Cash / Finance">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('cash_finance')" label="Cash / Finance">
               <el-select
                 v-model="purchaseItem.cash_finance"
                 class="filter-item"
@@ -230,7 +213,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Location">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('location')" label="Location">
               <el-select
                 v-model="purchaseItem.location"
                 class="filter-item"
@@ -245,7 +228,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Shipped">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('shipped')" label="Shipped">
               <el-select
                 v-model="purchaseItem.shipped"
                 class="filter-item"
@@ -260,7 +243,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Signed Record">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('signed_record')" label="Signed Record">
               <el-select
                 v-model="purchaseItem.signed_record"
                 class="filter-item"
@@ -275,7 +258,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Lender">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('lender')" label="Lender">
               <el-select
                 v-model="purchaseItem.lender"
                 class="filter-item"
@@ -290,7 +273,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Funding Status">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('funding_status')" label="Funding Status">
               <el-select
                 v-model="purchaseItem.funding_status"
                 class="filter-item"
@@ -305,7 +288,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Warranty">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('warranty')" label="Warranty">
               <el-select
                 v-model="purchaseItem.warranty"
                 class="filter-item"
@@ -320,7 +303,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Parts Needed">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('parts_needed')" label="Parts Needed">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -330,7 +313,7 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="State Inspection">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('inspection')" label="State Inspection">
               <el-select
                 v-model="purchaseItem.inspection"
                 class="filter-item"
@@ -345,7 +328,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Make Ready">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('make_ready')" label="Make Ready">
               <el-select
                 v-model="purchaseItem.make_ready"
                 class="filter-item"
@@ -360,7 +343,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="Repair Status">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('repair_status')" label="Repair Status">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -370,18 +353,7 @@
               </el-input>
             </el-form-item>
 
-
-            <el-form-item label="Repair Status">
-              <el-input
-                type="textarea"
-                placeholder="Please input"
-                v-model="purchaseItem.repair_status"
-                show-word-limit
-              >
-              </el-input>
-            </el-form-item>
-
-            <el-form-item label="Ship Date">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('ship_date')" label="Ship Date">
               <el-input
                 type="date"
                 placeholder="Please input"
@@ -391,7 +363,7 @@
             </el-form-item>
 
 
-            <el-form-item label="Notes">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('notes')" label="Notes">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -402,7 +374,7 @@
             </el-form-item>
 
 
-            <el-form-item label="Docs Needed">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('docs_needed')" label="Docs Needed">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -413,7 +385,7 @@
             </el-form-item>
 
 
-            <el-form-item label="Review">
+            <el-form-item v-if="viewPermissions && viewPermissions.includes('review')" label="Review">
               <el-input
                 type="textarea"
                 placeholder="Please input"
@@ -446,7 +418,7 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import PurchaseResource from '@/api/purchase';
 import Resource from '@/api/resource';
-import waves from '@/directive/waves'; // Waves directive
+import {mapGetters} from 'vuex'; // Waves directive
 
 const purchaseResource = new PurchaseResource();
 const userResource = new Resource('users');
@@ -454,6 +426,8 @@ const warrantyResource = new Resource('warranty');
 const fundingResource = new Resource('funding-status');
 const lenderResource = new Resource('lender');
 const makeReadyResource = new Resource('make-ready');
+const permissionResource = new Resource('permissions');
+
 
 export default {
   name: 'UserList',
@@ -527,7 +501,20 @@ export default {
       rules: {},
     };
   },
-  computed: {},
+  computed: {
+      ...mapGetters([
+          'permissions'
+      ]),
+      viewPermissions(){
+          var permissionValues = []
+          for(var i in this.permissions){
+              var permissionTitle = this.permissions[i].title.replace('View ', '');
+              permissionValues.push(permissionTitle)
+          }
+        return permissionValues;
+      }
+
+  },
   created() {
     this.resetCurrentItem();
     this.getList();

@@ -45,6 +45,12 @@ class AuthController extends Controller
     public function user()
     {
         $user = new UserResource(Auth::user());
+
+        if(!empty($user->role_id)){
+            $roles = (array) app('RoleRepository')->findById($user->role_id);
+            $user->additional($roles);
+        }
+
         return $user;
     }
 
