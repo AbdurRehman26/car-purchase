@@ -1,15 +1,25 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-   
-
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-plus"
+        @click="handleCreate"
+      >
         {{ $t('table.add') }}
       </el-button>
-
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table
+      v-loading="loading"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+    >
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.index }}</span>
@@ -34,28 +44,62 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="Actions">
+        <template slot-scope="scope">
+          <el-button
+            @click.prevent="
+              dialogFormVisible = true;
+              newUser = scope.row;
+            "
+            type="info"
+            size="small"
+          >
+            Edit
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="query.page"
+      :limit.sync="query.limit"
+      @pagination="getList"
+    />
 
     <el-dialog :title="'Create new user'" :visible.sync="dialogFormVisible">
       <div v-loading="userCreating" class="form-container">
-        <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
-          
+        <el-form
+          ref="userForm"
+          :rules="rules"
+          :model="newUser"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
           <el-form-item :label="$t('user.role')" prop="role_id">
-            <el-select v-model="newUser.role_id" class="filter-item" placeholder="Please select role">
-              <el-option v-for="item in roles" :key="item.id" :label="item.title" :value="item.id" />
+            <el-select
+              v-model="newUser.role_id"
+              class="filter-item"
+              placeholder="Please select role"
+            >
+              <el-option
+                v-for="item in roles"
+                :key="item.id"
+                :label="item.title"
+                :value="item.id"
+              />
             </el-select>
           </el-form-item>
-          
+
           <el-form-item :label="$t('user.name')" prop="name">
             <el-input v-model="newUser.name" />
           </el-form-item>
-          
+
           <el-form-item :label="$t('user.email')" prop="email">
-            <el-input v-model="newUser.email" />
+            <el-input :disabled="newUser.id" v-model="newUser.email" />
           </el-form-item>
-          
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
@@ -87,7 +131,7 @@ export default {
   directives: { waves, permission },
   data() {
     return {
-      roles : [],
+      roles: [],
       list: null,
       total: 0,
       loading: true,
@@ -97,22 +141,29 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
-        pagination : true
+        pagination: true,
       },
       newUser: {},
       dialogFormVisible: false,
       rules: {
-        role_id: [{ required: true, message: 'Role is required', trigger: 'change' }],
-        name: [{ required: true, message: 'Name is required', trigger: 'blur' }],
+        role_id: [
+          { required: true, message: 'Role is required', trigger: 'change' },
+        ],
+        name: [
+          { required: true, message: 'Name is required', trigger: 'blur' },
+        ],
         email: [
           { required: true, message: 'Email is required', trigger: 'blur' },
-          { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
+          {
+            type: 'email',
+            message: 'Please input correct email address',
+            trigger: ['blur', 'change'],
+          },
         ],
       },
     };
   },
-  computed: {
-  },
+  computed: {},
   created() {
     this.resetNewUser();
     this.getList();
@@ -124,22 +175,16 @@ export default {
       this.loading = true;
       const response = await userResource.list(this.query);
 
-
-
-
       this.list = response.data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
       this.total = response.pagination.total;
       this.loading = false;
-      
     },
     async getRolesList() {
-
-      const  response = await roleResource.list({});
-      this.roles = response.data
-
+      const response = await roleResource.list({});
+      this.roles = response.data;
     },
     handleFilter() {
       this.query.page = 1;
@@ -153,14 +198,27 @@ export default {
       });
     },
     createUser() {
-      this.$refs['userForm'].validate((valid) => {
+      this.$refs['userForm'].validate(valid => {
         if (valid) {
           this.userCreating = true;
-          userResource
-            .store(this.newUser)
+
+          var request = {};
+
+          if (this.newUser.id) {
+            request = userResource.update(this.newUser.id, this.newUser);
+          } else {
+            request = userResource.store(this.newUser);
+          }
+
+          request
             .then(response => {
               this.$message({
-                message: 'New user ' + this.newUser.name + '(' + this.newUser.email + ') has been created successfully.',
+                message:
+                  'New user ' +
+                  this.newUser.name +
+                  '(' +
+                  this.newUser.email +
+                  ') has been saved successfully.',
                 type: 'success',
                 duration: 5 * 1000,
               });

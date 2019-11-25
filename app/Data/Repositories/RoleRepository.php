@@ -41,7 +41,6 @@ class RoleRepository extends AbstractRepository implements RepositoryContract
 
     }
 
-
         /**
      *
      * This method will fetch single model

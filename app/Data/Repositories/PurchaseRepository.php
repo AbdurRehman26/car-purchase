@@ -118,9 +118,16 @@ class PurchaseRepository extends AbstractRepository implements RepositoryContrac
 
         }
 
-        if(!empty($input['file_uploaded_at'])){
+        if(!empty($input['file_uploaded_at_start'])){
 
-            $this->builder = $this->builder->whereDate('file_uploaded_at' , '=' , $input['file_uploaded_at']);
+            $this->builder = $this->builder->whereDate('file_uploaded_at' , '>=' , $input['file_uploaded_at_start']);
+
+        }
+
+
+        if(!empty($input['file_uploaded_at_end'])){
+
+            $this->builder = $this->builder->whereDate('file_uploaded_at' , '<=' , $input['file_uploaded_at_end']);
 
         }
 

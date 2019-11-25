@@ -4,7 +4,7 @@
       <el-input
         v-model="query.keyword"
         :placeholder="$t('table.keyword')"
-        style="width: 200px;"
+        style="width: 120px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
@@ -28,7 +28,7 @@
         v-model="query.funding_status"
         :placeholder="'Funding'"
         clearable
-        style="margin-left:10px; width: 150px"
+        style="margin-left:10px; width: 120px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -44,7 +44,7 @@
         v-model="query.shipped_record"
         :placeholder="'Shipped'"
         clearable
-        style="margin-left:10px; width: 150px"
+        style="margin-left:10px; width: 120px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -60,7 +60,7 @@
         v-model="query.local_or_state"
         :placeholder="'Local / State'"
         clearable
-        style="margin-left:10px; width: 150px"
+        style="margin-left:10px; width: 120px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -76,7 +76,7 @@
         v-model="query.cash_finance"
         :placeholder="'Cash / Finance'"
         clearable
-        style="margin-left:10px; width: 150px"
+        style="margin-left:10px; width: 120px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -92,7 +92,7 @@
         v-model="query.location"
         :placeholder="'Location'"
         clearable
-        style="margin-left:10px; width: 150px"
+        style="margin-left:10px; width: 120px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -108,7 +108,7 @@
         v-model="query.sales_status"
         :placeholder="'Sales Status'"
         clearable
-        style="margin-left:10px; width: 150px"
+        style="margin-left:10px; width: 120px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -120,14 +120,27 @@
         />
       </el-select>
 
+      <span style="margin-left:10px;" class="demo-input-label">Start Date:</span>
       <el-input
         type="date"
-        style="margin-left:10px; width: 150px"
+        style="width: 150px"
         placeholder="File Uploaded"
-        v-model="query.file_uploaded_at"
+        v-model="query.file_uploaded_at_start"
         @change="handleFilter"
       >
       </el-input>
+
+
+      <span style="margin-left:10px;" class="demo-input-label">End Date:</span>
+      <el-input
+        type="date"
+        style="width: 150px"
+        placeholder="File Uploaded"
+        v-model="query.file_uploaded_at_end"
+        @change="handleFilter"
+      >
+      </el-input>
+ 
     </div>
 
     <el-table

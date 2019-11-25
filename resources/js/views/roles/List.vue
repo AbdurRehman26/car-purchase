@@ -1,13 +1,17 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-
-
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-plus"
+        @click="handleCreate"
+      >
         {{ $t('table.add') }}
       </el-button>
 
-   <!--    <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <!--    <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
       <el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in roles" :key="item" :label="item | uppercaseFirst" :value="item" />
@@ -21,10 +25,16 @@
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
-    -->
-    </div>
+    --></div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table
+      v-loading="loading"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+    >
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.index }}</span>
@@ -39,60 +49,71 @@
 
       <el-table-column align="center" label="Access">
         <template slot-scope="scope">
-          <span v-for="permission in scope.row.permissions">{{ permission.title.replace('View', '').replace(new RegExp('_', 'g'), ' ').toUpperCase() + ' | ' }} </span>
+          <span v-for="permission in scope.row.permissions"
+            >{{
+              permission.title
+                .replace('View', '')
+                .replace(new RegExp('_', 'g'), ' ')
+                .toUpperCase() + ' | '
+            }}
+          </span>
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="Actions">
+        <template slot-scope="scope">
+          <el-button
+            @click.prevent="
+              dialogFormVisible = true;
+              setRoleValue(scope.row);
+            "
+            type="info"
+            size="small"
+          >
+            Edit
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
-
-    <el-dialog :visible.sync="dialogPermissionVisible" :title="'Edit Permissions - ' + currentUser.name">
-      <div v-if="currentUser.name" v-loading="dialogPermissionLoading" class="form-container">
-        <div class="permissions-container">
-          <div class="block">
-            <el-form :model="currentUser" label-width="80px" label-position="top">
-              <el-form-item label="Menus">
-                <el-tree ref="menuPermissions" :data="normalizedMenuPermissions" :default-checked-keys="permissionKeys(userMenuPermissions)" :props="permissionProps" show-checkbox node-key="id" class="permission-tree" />
-              </el-form-item>
-            </el-form>
-          </div>
-          <div class="block">
-            <el-form :model="currentUser" label-width="80px" label-position="top">
-              <el-form-item label="Permissions">
-                <el-tree ref="otherPermissions" :data="normalizedOtherPermissions" :default-checked-keys="permissionKeys(userOtherPermissions)" :props="permissionProps" show-checkbox node-key="id" class="permission-tree" />
-              </el-form-item>
-            </el-form>
-          </div>
-          <div class="clear-left" />
-        </div>
-        <div style="text-align:right;">
-          <el-button type="danger" @click="dialogPermissionVisible=false">
-            {{ $t('permission.cancel') }}
-          </el-button>
-          <el-button type="primary" @click="confirmPermission">
-            {{ $t('permission.confirm') }}
-          </el-button>
-        </div>
-      </div>
-    </el-dialog>
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="query.page"
+      :limit.sync="query.limit"
+      @pagination="getList"
+    />
 
     <el-dialog :title="'Create new role'" :visible.sync="dialogFormVisible">
       <div v-loading="userCreating" class="form-container">
-        <el-form ref="userForm" :rules="rules" :model="formData" label-position="left" label-width="150px" style="max-width: 500px;">
-
+        <el-form
+          ref="userForm"
+          :rules="rules"
+          :model="formData"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
           <el-form-item :label="$t('roles.title')" prop="title">
             <el-input v-model="formData.title" />
           </el-form-item>
-
           <el-form-item :label="$t('roles.permissions')">
-
-            <el-checkbox v-for="operation in operations" :label="operation.id" v-model="formData.operations" :key="operation.id">{{operation.title.replace('View' , '').replace(new RegExp('_', 'g'), ' ').toUpperCase()}}</el-checkbox>
-
+            <el-checkbox
+              :disabled="formData.id"
+              @change="selectPermissions(operation.id)"
+              v-for="operation in operations"
+              :label="operation.id"
+              v-model="formData.operations"
+              :key="operation.id"
+              >{{
+                operation.title
+                  .replace('View', '')
+                  .replace(new RegExp('_', 'g'), ' ')
+                  .toUpperCase()
+              }}</el-checkbox
+            >
 
           </el-form-item>
-
-
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
@@ -133,14 +154,14 @@ export default {
       }
     };
     return {
-      operations : [],
+      operations: [],
       list: null,
       total: 0,
       loading: true,
       downloading: false,
       userCreating: false,
       query: {
-        pagination : true,
+        pagination: true,
         page: 1,
         limit: 15,
         keyword: '',
@@ -149,7 +170,7 @@ export default {
       roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
       nonAdminRoles: ['editor', 'user', 'visitor'],
       formData: {
-        operations : []
+        operations: [],
       },
       dialogFormVisible: false,
       dialogPermissionVisible: false,
@@ -161,15 +182,29 @@ export default {
         rolePermissions: [],
       },
       rules: {
-        title: [{ required: true, message: 'Title is required', trigger: 'change' }],
-        role: [{ required: true, message: 'Role is required', trigger: 'change' }],
-        name: [{ required: true, message: 'Name is required', trigger: 'blur' }],
+        title: [
+          { required: true, message: 'Title is required', trigger: 'change' },
+        ],
+        role: [
+          { required: true, message: 'Role is required', trigger: 'change' },
+        ],
+        name: [
+          { required: true, message: 'Name is required', trigger: 'blur' },
+        ],
         email: [
           { required: true, message: 'Email is required', trigger: 'blur' },
-          { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
+          {
+            type: 'email',
+            message: 'Please input correct email address',
+            trigger: ['blur', 'change'],
+          },
         ],
-        password: [{ required: true, message: 'Password is required', trigger: 'blur' }],
-        confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
+        password: [
+          { required: true, message: 'Password is required', trigger: 'blur' },
+        ],
+        confirmPassword: [
+          { validator: validateConfirmPassword, trigger: 'blur' },
+        ],
       },
       permissionProps: {
         children: 'children',
@@ -198,7 +233,10 @@ export default {
         children: this.classifyPermissions(tmp).menu,
       };
 
-      tmp = this.menuPermissions.filter(permission => !this.currentUser.permissions.role.find(p => p.id === permission.id));
+      tmp = this.menuPermissions.filter(
+        permission =>
+          !this.currentUser.permissions.role.find(p => p.id === permission.id)
+      );
       const userPermissions = {
         id: 0, // Faked ID
         name: 'Extra menus',
@@ -224,7 +262,10 @@ export default {
         children: this.classifyPermissions(tmp).other,
       };
 
-      tmp = this.otherPermissions.filter(permission => !this.currentUser.permissions.role.find(p => p.id === permission.id));
+      tmp = this.otherPermissions.filter(
+        permission =>
+          !this.currentUser.permissions.role.find(p => p.id === permission.id)
+      );
       const userPermissions = {
         id: 0,
         name: 'Extra permissions',
@@ -241,19 +282,52 @@ export default {
       return this.classifyPermissions(this.userPermissions).other;
     },
     userPermissions() {
-      return this.currentUser.permissions.role.concat(this.currentUser.permissions.user);
+      return this.currentUser.permissions.role.concat(
+        this.currentUser.permissions.user
+      );
     },
   },
   created() {
     this.resetNewUser();
     this.getList();
-    this.getOperationsList()
+    this.getOperationsList();
 
     if (checkPermission(['manage permission'])) {
       this.getPermissions();
     }
   },
+  watch : {
+    'formData.operations'(){
+
+    }
+  },
   methods: {
+    selectPermissions(id){
+      console.log(id, this.formData.operations.includes(id))
+      if(this.formData.operations.includes(id)){
+      
+        this.formData.operations.splice(this.formData.operations.indexOf(id))
+      
+      }else{
+      
+        this.formData.operations.push(id)
+
+      }
+
+      console.log(this.formData);
+
+    },
+    setRoleValue(userRole) {
+      this.formData = Object.assign({}, userRole);
+      this.formData.operations = [];
+
+      for (var i in this.formData.permissions) {
+        this.formData.operations.push(
+          this.formData.permissions[i].operation_id
+        );
+      }
+    },
+
     checkPermission,
     async getPermissions() {
       const { data } = await permissionResource.list({});
@@ -264,7 +338,7 @@ export default {
     },
     async getOperationsList() {
       const response = await operationResource.list({});
-      this.operations = response.data
+      this.operations = response.data;
     },
 
     async getList() {
@@ -272,7 +346,7 @@ export default {
       this.loading = true;
       const response = await roleResource.list(this.query);
 
-      console.log(response.data , 111111)
+      console.log(response.data, 111111);
 
       this.list = response.data;
       this.list.forEach((element, index) => {
@@ -292,26 +366,35 @@ export default {
       });
     },
     handleDelete(id, name) {
-      this.$confirm('This will permanently delete user ' + name + '. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-      }).then(() => {
-        roleResource.destroy(id).then(response => {
+      this.$confirm(
+        'This will permanently delete user ' + name + '. Continue?',
+        'Warning',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          roleResource
+            .destroy(id)
+            .then(response => {
+              this.$message({
+                type: 'success',
+                message: 'Delete completed',
+              });
+              this.handleFilter();
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(() => {
           this.$message({
-            type: 'success',
-            message: 'Delete completed',
+            type: 'info',
+            message: 'Delete canceled',
           });
-          this.handleFilter();
-        }).catch(error => {
-          console.log(error);
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: 'Delete canceled',
-        });
-      });
     },
     async handleEditPermissions(id) {
       this.currentUserId = id;
@@ -326,20 +409,37 @@ export default {
       };
       this.dialogPermissionLoading = false;
       this.$nextTick(() => {
-        this.$refs.menuPermissions.setCheckedKeys(this.permissionKeys(this.userMenuPermissions));
-        this.$refs.otherPermissions.setCheckedKeys(this.permissionKeys(this.userOtherPermissions));
+        this.$refs.menuPermissions.setCheckedKeys(
+          this.permissionKeys(this.userMenuPermissions)
+        );
+        this.$refs.otherPermissions.setCheckedKeys(
+          this.permissionKeys(this.userOtherPermissions)
+        );
       });
     },
     createUser() {
-      this.$refs['userForm'].validate((valid) => {
+      this.$refs['userForm'].validate(valid => {
         if (valid) {
           this.formData.roles = [this.formData.role];
           this.userCreating = true;
-          roleResource
-            .store(this.formData)
+
+          var request = {};
+
+          if (this.formData.id) {
+            request = roleResource.update(this.formData.id, this.formData);
+          } else {
+            request = roleResource.store(this.formData);
+          }
+
+          request
             .then(response => {
               this.$message({
-                message: 'New user ' + this.formData.name + '(' + this.formData.email + ') has been created successfully.',
+                message:
+                  'New user ' +
+                  this.formData.name +
+                  '(' +
+                  this.formData.email +
+                  ') has been saved successfully.',
                 type: 'success',
                 duration: 5 * 1000,
               });
@@ -359,8 +459,7 @@ export default {
         }
       });
     },
-    resetNewUser() {
-    },
+    resetNewUser() {},
     handleDownload() {
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {
@@ -382,7 +481,9 @@ export default {
       return permissions.map(permssion => permssion.id);
     },
     classifyPermissions(permissions) {
-      const all = []; const menu = []; const other = [];
+      const all = [];
+      const menu = [];
+      const other = [];
       permissions.forEach(permission => {
         const permissionName = permission.name;
         all.push(permission);
@@ -396,12 +497,23 @@ export default {
     },
 
     normalizeMenuPermission(permission) {
-      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name.substring(10)), disabled: permission.disabled || false };
+      return {
+        id: permission.id,
+        name: this.$options.filters.uppercaseFirst(
+          permission.name.substring(10)
+        ),
+        disabled: permission.disabled || false,
+      };
     },
 
     normalizePermission(permission) {
-      const disabled = permission.disabled || permission.name === 'manage permission';
-      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name), disabled: disabled };
+      const disabled =
+        permission.disabled || permission.name === 'manage permission';
+      return {
+        id: permission.id,
+        name: this.$options.filters.uppercaseFirst(permission.name),
+        disabled: disabled,
+      };
     },
 
     confirmPermission() {
@@ -410,15 +522,19 @@ export default {
       const checkedPermissions = checkedMenu.concat(checkedOther);
       this.dialogPermissionLoading = true;
 
-      roleResource.updatePermission(this.currentUserId, { permissions: checkedPermissions }).then(response => {
-        this.$message({
-          message: 'Permissions has been updated successfully',
-          type: 'success',
-          duration: 5 * 1000,
+      roleResource
+        .updatePermission(this.currentUserId, {
+          permissions: checkedPermissions,
+        })
+        .then(response => {
+          this.$message({
+            message: 'Permissions has been updated successfully',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.dialogPermissionLoading = false;
+          this.dialogPermissionVisible = false;
         });
-        this.dialogPermissionLoading = false;
-        this.dialogPermissionVisible = false;
-      });
     },
   },
 };
