@@ -100,7 +100,6 @@
           <el-form-item :label="$t('roles.permissions')">
             <el-checkbox
               :disabled="formData.id"
-              @change="selectPermissions(operation.id)"
               v-for="operation in operations"
               :label="operation.id"
               v-model="formData.operations"

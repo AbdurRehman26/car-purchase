@@ -703,13 +703,13 @@
     </el-dialog>
 
     <el-dialog :visible.sync="dialogOpen" title="View Sales">
-      <div class="form-container">
+      <div class="view-sales-dialog-box form-container">
         <div class="permissions-container">
-          <el-form v-if="currentItem" ref="form" label-width="320px">
+          <el-form v-if="currentItem" ref="form" label-width="140px">
             <el-form-item
               :key="index"
               v-for="(listValue, index) in listKeys"
-              :label="listValue.label"
+              :label="listValue.label + ' : '"
             >
               {{ currentItem[listValue.key] }}
             </el-form-item>
@@ -1037,6 +1037,17 @@ export default {
   },
 };
 </script>
+
+<style type="text/css">
+  
+.view-sales-dialog-box .el-form-item__label{
+
+  text-align: left !important;
+
+}
+
+</style>
+
 
 <style lang="scss" scoped>
 .edit-input {

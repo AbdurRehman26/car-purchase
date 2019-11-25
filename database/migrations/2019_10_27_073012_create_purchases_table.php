@@ -18,10 +18,8 @@ class CreatePurchasesTable extends Migration {
 			$table->integer('user_id')->unsigned()->nullable();
 			$table->string('vin')->nullable();
 			$table->string('model')->nullable();
-			$table->timestamps();
 			$table->integer('year')->nullable();
 			$table->string('make')->nullable();
-			$table->softDeletes();
 			$table->text('need_to_address', 65535)->nullable();
 			$table->text('trade_in', 65535)->nullable();
 			$table->text('deposit', 65535)->nullable();
@@ -35,10 +33,16 @@ class CreatePurchasesTable extends Migration {
 			$table->enum('funding_status', array('not','financed','wired','cashier','draft'))->nullable();
 			$table->integer('warranty')->nullable();
 			$table->text('parts_needed', 65535)->nullable();
+			$table->text('review', 65535)->nullable();
 			$table->enum('inspection', array('yes','no','n/a'))->nullable();
 			$table->integer('make_ready')->nullable();
+			$table->text('notes')->nullable();
 			$table->text('repair_status', 65535)->nullable();
 			$table->boolean('is_sold')->nullable();
+			$table->date('file_uploaded_at')->nullable();
+			$table->date('ship_date')->nullable();
+			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 
