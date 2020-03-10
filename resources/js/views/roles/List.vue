@@ -111,7 +111,6 @@
                   .toUpperCase()
               }}</el-checkbox
             >
-
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -295,26 +294,19 @@ export default {
       this.getPermissions();
     }
   },
-  watch : {
-    'formData.operations'(){
-
-    }
+  watch: {
+    'formData.operations'() {},
   },
   methods: {
-    selectPermissions(id){
-      console.log(id, this.formData.operations.includes(id))
-      if(this.formData.operations.includes(id)){
-      
-        this.formData.operations.splice(this.formData.operations.indexOf(id))
-      
-      }else{
-      
-        this.formData.operations.push(id)
-
+    selectPermissions(id) {
+      console.log(id, this.formData.operations.includes(id));
+      if (this.formData.operations.includes(id)) {
+        this.formData.operations.splice(this.formData.operations.indexOf(id));
+      } else {
+        this.formData.operations.push(id);
       }
 
       console.log(this.formData);
-
     },
     setRoleValue(userRole) {
       this.formData = Object.assign({}, userRole);
@@ -359,6 +351,8 @@ export default {
       this.getList();
     },
     handleCreate() {
+      this.resetNewUser();
+
       this.dialogFormVisible = true;
       this.$nextTick(() => {
         this.$refs['userForm'].clearValidate();
@@ -458,7 +452,12 @@ export default {
         }
       });
     },
-    resetNewUser() {},
+    resetNewUser() {
+      this.formData = {
+        title: '',
+        operations: [],
+      };
+    },
     handleDownload() {
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {
