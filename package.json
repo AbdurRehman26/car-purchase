@@ -74,6 +74,6 @@
     "vue-splitpane": "^1.0.4",
     "vuedraggable": "^2.23.0",
     "vuex": "3.1.0",
-    "xlsx": "^0.14.5"
+    "xlsx": "^0.17.0"
   }
 }
